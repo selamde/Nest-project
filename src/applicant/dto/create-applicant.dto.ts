@@ -4,14 +4,14 @@ import { IsEmail, IsEnum, IsOptional, IsString } from "class-validator"
 
 export class CreateApplicantDto{
     @IsString()
-    fullName: String
+    fullName: string
 
     @IsEmail()
     email: string
 
     @IsOptional()
     @IsString()
-    phone?: String
+    phone?: string
 
     @IsEnum(Track)
     track: Track
