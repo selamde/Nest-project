@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
-import { DashboardService } from './dashboard.service';
+import { DashboardService, Summary } from './dashboard.service';
+
 
 @Controller('dashboard')
 export class DashboardController {
@@ -7,8 +8,8 @@ export class DashboardController {
     constructor(private readonly dashboardSevice:DashboardService){}
 
     @Get('/summary')
-    getSummary(){
-        return {message: "getting all summaries"}
+      getSummary(): Promise<Summary>{
+        return this.dashboardSevice.getSummary();
     }
 
 }
