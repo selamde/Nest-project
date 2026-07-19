@@ -1,5 +1,5 @@
 import { Track } from "@prisma/client"
-import { IsEmail, IsEnum, IsOptional, IsString } from "class-validator"
+import { IsEmail, IsEnum, IsOptional, IsString, MaxLength } from "class-validator"
 
 
 export class CreateApplicantDto{
@@ -15,5 +15,10 @@ export class CreateApplicantDto{
 
     @IsEnum(Track)
     track: Track
+
+    @IsOptional()
+    @IsString()
+    @MaxLength(100)
+    note?:string
 
 }
