@@ -4,7 +4,9 @@ import { CreateApplicantDto } from './dto/create-applicant.dto';
 import { UpdateApplicantDto } from './dto/update-applicant.dto';
 import { UpdateNotesDto } from './dto/update-notes.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('applicant')
 @Controller('applicant')
 export class ApplicantController {
     constructor(private readonly applicantService:ApplicantService){}
