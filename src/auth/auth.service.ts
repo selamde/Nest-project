@@ -14,7 +14,10 @@ export class AuthService {
             throw new Error("User not found!")
 
         }
-return {message: "login"}
+
+
+
+return {message: `${dto.email} and ${dto.password}`}
     }
 
     getInfo(){
