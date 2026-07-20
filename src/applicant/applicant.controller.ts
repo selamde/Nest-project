@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApplicantService } from './applicant.service';
 import { CreateApplicantDto } from './dto/create-applicant.dto';
 import { UpdateApplicantDto } from './dto/update-applicant.dto';
 import { UpdateNotesDto } from './dto/update-notes.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('applicant')
 @Controller('applicant')
@@ -17,6 +18,7 @@ export class ApplicantController {
        return this.applicantService.createApplicants(createApplicantDto)
     }
 // GET    /api/applicants
+@UseGuards(JwtAuthGuard)
 @Get()
     getAllApplicants(){
         return this.applicantService.getAllApplicants()
