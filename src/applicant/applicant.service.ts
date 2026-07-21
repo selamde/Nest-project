@@ -36,6 +36,7 @@ async getAllApplicants(
     name?:string){
     const applicants = await this.prisma.applicant.findMany({
      where: name? {
+        deletedAt:null,
         fullName: {contains: name.toLowerCase(), 
             mode: "insensitive"
         },
@@ -50,6 +51,7 @@ return applicants
 async getSingleApplicant(id:string){
     const applicant = await this.prisma.applicant.findUnique({
         where:{
+            deletedAt: null,
             id: id
         }
     })
@@ -91,13 +93,16 @@ async deleteApplicant(id:string){
             id:id
         }
       })
-      if(!applicant){
+      if(!applicant || applicant.deletedAt){
         throw new NotFoundException(`No applcants found with id: ${id}`)
       }
-      const deleteApplicant = await this.prisma.applicant.delete({
-        where:{
-            id:id
-        }
+      const deleteApplicant = await this.prisma.applicant.update({
+       where:{
+        id:id
+       },
+       data:{
+        deletedAt: new Date()
+       }
       })
       if(!deleteApplicant){
         throw new Error("Failed to delete the applicant")
@@ -114,7 +119,12 @@ async updateApplicantStatus(id:string, dto:UpdateStatusDto){
     if(!applicant){
         throw new NotFoundException(`NO applicant with id: ${id}`)
     }
-    const updateStatus = await this.prisma.applicant.update({
+   
+    if(applicant.status === "REJECTED" && dto.status==="ACCEPTED"){
+        throw new BadRequestException("Applicant can not be accepted after rejection!");
+    }
+
+     const updateStatus = await this.prisma.applicant.update({
         where:{
             id:id
         },
@@ -126,10 +136,7 @@ async updateApplicantStatus(id:string, dto:UpdateStatusDto){
     if(!updateStatus){
         throw new Error("Failed to update the status of the applicant!")
     }
-    if(applicant.status === "REJECTED" && dto.status==="ACCEPTED"){
-        throw new BadRequestException("Applicant can not be accepted after rejection!");
-    }
-    
+
     return {message: "updating applicant status"}
 }
 
