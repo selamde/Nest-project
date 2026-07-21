@@ -10,6 +10,7 @@ import { QueryApplicantDto } from './dto/query-applicant.dto';
 
 @ApiTags('applicant')
 @ApiBearerAuth()
+
 @Controller('applicant')
 
 export class ApplicantController {
