@@ -19,7 +19,7 @@ model applicant {
   id       String  @id @default(cuid())
   fullName String
   email    String  @unique
-  phone    String?
+  phone    String? @unique
   notes    String?
   track    Track
   status   Status  @default(PENDING)

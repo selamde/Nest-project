@@ -1,10 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateApplicantDto } from './dto/create-applicant.dto';
 import { UpdateApplicantDto } from './dto/update-applicant.dto';
 import { UpdateNotesDto } from './dto/update-notes.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { contains } from 'class-validator';
 
 
 
@@ -31,7 +30,10 @@ async createApplicants(dto:CreateApplicantDto){
   return applicant
 }
 // GET    /api/applicants
-async getAllApplicants(name:string = ''){
+async getAllApplicants(
+    page,
+    limit,
+    name?:string){
     const applicants = await this.prisma.applicant.findMany({
      where: name? {
         fullName: {contains: name.toLowerCase(), 
@@ -124,6 +126,10 @@ async updateApplicantStatus(id:string, dto:UpdateStatusDto){
     if(!updateStatus){
         throw new Error("Failed to update the status of the applicant!")
     }
+    if(applicant.status === "REJECTED" && dto.status==="ACCEPTED"){
+        throw new BadRequestException("Applicant can not be accepted after rejection!");
+    }
+    
     return {message: "updating applicant status"}
 }
 
