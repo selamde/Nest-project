@@ -35,12 +35,16 @@ async getAllApplicants(
     limit,
     name?:string){
     const applicants = await this.prisma.applicant.findMany({
-     where: name? {
+     where: {
         deletedAt:null,
+        ...(
+            name? {
         fullName: {contains: name.toLowerCase(), 
             mode: "insensitive"
         },
      }:{}
+        )
+     }
     })
     if(!applicants){
          throw new NotFoundException("No applicants found")
@@ -68,7 +72,8 @@ async updateApplicantData(id:string, dto:UpdateApplicantDto){
 
     const applicant = await this.prisma.applicant.findUnique({
         where:{
-            id:id
+            id:id,
+            deletedAt:null
         }
     })
     if(!applicant){
@@ -113,7 +118,8 @@ async deleteApplicant(id:string){
 async updateApplicantStatus(id:string, dto:UpdateStatusDto){
     const applicant = await this.prisma.applicant.findUnique({
         where:{
-            id:id
+            id:id,
+            deletedAt:null
         }
     })
     if(!applicant){
