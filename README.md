@@ -122,7 +122,7 @@ prisma
 | id        | Integer             |
 | fullName  | String              |
 | email     | String (Unique)     |
-| phone     | String              |
+| phone     | String (Unique)     |
 | track     | Enum                |
 | status    | Enum                |
 | notes     | String              |
