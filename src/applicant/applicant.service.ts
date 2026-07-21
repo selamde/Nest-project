@@ -150,7 +150,8 @@ async updateApplicantStatus(id:string, dto:UpdateStatusDto){
 async updatingApplicanNotes(id:string, dto:UpdateNotesDto){
     const applicant = await this.prisma.applicant.findUnique({
         where:{
-            id:id
+            id:id,
+            deletedAt:null
         }
     })
     if(!applicant){
