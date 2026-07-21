@@ -63,7 +63,9 @@ async getAllApplicants(query: QueryApplicantDto){
         ...(track? {track}:{}),
         ...(status? {status}:{})
      }
-
+  const total = await this.prisma.applicant.count({
+    where
+  })
      const applicants = await this.prisma.applicant.findMany({ 
         where,
         skip,
@@ -75,7 +77,15 @@ async getAllApplicants(query: QueryApplicantDto){
     if(!applicants){
          throw new NotFoundException("No applicants found")
     }
-return applicants
+return {
+    data:applicants,
+    meta:{
+        total,
+        page,
+        limit,
+        lastPage:Math.ceil(total/ limit)
+    }
+}
 }
 // GET    /api/applicants/:id
 async getSingleApplicant(id:string){
