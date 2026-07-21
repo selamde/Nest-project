@@ -4,6 +4,7 @@ import { UpdateApplicantDto } from './dto/update-applicant.dto';
 import { UpdateNotesDto } from './dto/update-notes.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { contains } from 'class-validator';
 
 
 
@@ -30,10 +31,13 @@ async createApplicants(dto:CreateApplicantDto){
   return applicant
 }
 // GET    /api/applicants
-async getAllApplicants(){
+async getAllApplicants(name:string = ''){
     const applicants = await this.prisma.applicant.findMany({
-        take:50,
-        skip:0,
+     where: name? {
+        fullName: {contains: name.toLowerCase(), 
+            mode: "insensitive"
+        },
+     }:{}
     })
     if(!applicants){
          throw new NotFoundException("No applicants found")

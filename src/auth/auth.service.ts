@@ -33,8 +33,5 @@ export class AuthService {
     return {access_token: token}
     }
 
-    getInfo(){
-        return {message:"info"}
-        
-    }
+    
 }
