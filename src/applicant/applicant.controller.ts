@@ -4,20 +4,19 @@ import { CreateApplicantDto } from './dto/create-applicant.dto';
 import { UpdateApplicantDto } from './dto/update-applicant.dto';
 import { UpdateNotesDto } from './dto/update-notes.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { QueryApplicantDto } from './dto/query-applicant.dto';
 
 @ApiTags('applicant')
-@ApiQuery({
-    name:'name',
-    required:false
-})
+@ApiBearerAuth()
 @Controller('applicant')
 
 export class ApplicantController {
     constructor(private readonly applicantService:ApplicantService){}
       
 // POST   /api/applicants
+
 @UseGuards(JwtAuthGuard)
 @Post()
     createApplicants(@Body() createApplicantDto: CreateApplicantDto){
@@ -26,11 +25,8 @@ export class ApplicantController {
 // GET    /api/applicants
 @UseGuards(JwtAuthGuard)
 @Get()
-    getAllApplicants(
-        @Query('page') page='1',
-        @Query('limit') limit='10',
-        @Query('name') name?:string){
-        return this.applicantService.getAllApplicants(+page, +limit, name)
+    getAllApplicants(@Query() query: QueryApplicantDto){
+        return this.applicantService.getAllApplicants(query)
 }
 // GET    /api/applicants/:id
 @UseGuards(JwtAuthGuard)

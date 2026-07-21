@@ -4,6 +4,8 @@ import { UpdateApplicantDto } from './dto/update-applicant.dto';
 import { UpdateNotesDto } from './dto/update-notes.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { QueryApplicantDto } from './dto/query-applicant.dto';
+import { contains } from 'class-validator';
 
 
 
@@ -17,7 +19,6 @@ export class ApplicantService {
 async createApplicants(dto:CreateApplicantDto){
    const applicant = await this.prisma.applicant.create({
     data:{ 
-
         fullName: dto.fullName,
         email: dto.email,
         phone:dto.phone,
@@ -30,22 +31,47 @@ async createApplicants(dto:CreateApplicantDto){
   return applicant
 }
 // GET    /api/applicants
-async getAllApplicants(
-    page,
-    limit,
-    name?:string){
-    const applicants = await this.prisma.applicant.findMany({
-     where: {
+async getAllApplicants(query: QueryApplicantDto){
+    const {
+        page=1,
+        limit=10,
+        search,
+        track,
+        status,
+        sortBy="createdAt",
+        order='desc'
+
+    } = query;
+    const skip = (page - 1) * limit;
+   
+     const where = {
         deletedAt:null,
-        ...(
-            name? {
-        fullName: {contains: name.toLowerCase(), 
-            mode: "insensitive"
-        },
-     }:{}
-        )
+        ...(search?{
+            OR:[
+                {fullName:{ 
+                    contains:search,
+                   mode: "insensitive" as const
+                }},
+                {
+                    email:{
+                        contains:search,
+                        mode: "insensitive" as const
+                    }
+                }
+            ]
+        }:{}),
+        ...(track? {track}:{}),
+        ...(status? {status}:{})
      }
-    })
+
+     const applicants = await this.prisma.applicant.findMany({ 
+        where,
+        skip,
+        take:limit,
+        orderBy:{
+            [sortBy]: order
+        }
+        })
     if(!applicants){
          throw new NotFoundException("No applicants found")
     }
@@ -156,6 +182,10 @@ async updatingApplicanNotes(id:string, dto:UpdateNotesDto){
     })
     if(!applicant){
         throw new NotFoundException(`NO applicant with id: ${id}`)
+    }
+
+    if(dto.notes && dto.notes?.length > 1000){
+throw new BadRequestException(`Notes must not exceed 1,000 characters (current: ${dto.notes.length})`)
     }
 
     const updateNote = await this.prisma.applicant.update({

@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt'
 import { PrismaService } from 'src/prisma/prisma.service';
 
 
+
 const prisma = new PrismaService()
 
 async function main(){
@@ -23,6 +24,7 @@ async function main(){
     }
 
 );
+
 
 console.log(admin)
 console.log("Data seeded successfully!")
