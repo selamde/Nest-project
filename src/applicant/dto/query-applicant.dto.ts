@@ -24,13 +24,12 @@ page?: number
     default:1
 })
 @IsOptional()
-@IsString()
 @Type(()=> Number)
 @IsInt()   
 limit?: number
 
 @ApiPropertyOptional({
-    description:"Search by name and email"
+    description:"Search by name or email"
 })
 @IsOptional()
 search?: string

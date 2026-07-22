@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+//allows serviceto the enviromentvaru
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import {Strategy, ExtractJwt} from 'passport-jwt'
