@@ -405,6 +405,47 @@ Example
 
 ---
 
+# Interceptors
+
+Use TransformInterceptor to format responses.
+
+##Implementation
+
+```bash
+const response:Response = context.switchToHttp().getResponse();
+    const status = response.statusCode;
+
+    const message = messages[status] ?? "Success";
+
+    return next.handle().pipe(map((data: T)=>({
+      status,
+      message,
+      data
+    })));
+```
+
+Example
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "fullName": "John Doe",
+    "email": "[EMAIL_ADDRESS]",
+    "phone": "1234567890",
+    "track": "BACKEND",
+    "status": "PENDING",
+    "notes": "",
+    "deletedAt": null,
+    "createdAt": "2026-07-21T10:15:23.000Z",
+    "updatedAt": "2026-07-21T10:15:23.000Z"
+  }
+}
+```
+
+---
+
 # Architecture
 
 The application follows NestJS's modular architecture.
