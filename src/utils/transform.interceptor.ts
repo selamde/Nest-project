@@ -23,7 +23,7 @@ export class TransformInterceptor <T> implements NestInterceptor {
 
     return next.handle().pipe(map((data: T)=>({
       status,
-      message:"Success",
+      message,
       data
     })));
   }
