@@ -484,15 +484,7 @@ Business logic is kept inside services to maintain separation of concerns and im
 
 # Future Improvements
 
-- Role-Based Access Control (RBAC)
-- Refresh Tokens
-- Audit Logging
-- Rate Limiting
-- File Uploads (Resume/CV)
-- Email Notifications
-- Docker & Docker Compose
-- CI/CD Pipeline
-- Redis Caching
+- Docker and docker-compose
 
 ---
 
